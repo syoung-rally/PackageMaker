@@ -5,10 +5,7 @@ import com.vegas.interview.models.ItemPackage;
 import com.vegas.interview.models.ItemType;
 import com.vegas.interview.models.PriceType;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Set;
@@ -26,15 +23,13 @@ public class PackageMaker {
 
 
     public static void main(String[] args) {
-        String inputFilename;
-        String outputFilename;
+        String inputFilename, outputFilename;
         List<PriceType> priceTypeList;
         Set<ItemType> itemTypeSet;
-        BigDecimal minimumPrice;
-        BigDecimal maximumPrice;
+        BigDecimal minimumPrice, maximumPrice;
 
         BufferedReader iFileReader;
-
+        FileWriter oFileWriter;
 
         ItemDataManager itemDataManager = new ItemDataManager();
 
@@ -87,7 +82,9 @@ public class PackageMaker {
         List<ItemPackage> packages = itemDataManager.getPackagesInRange(minimumPrice, maximumPrice, itemTypeSet);
         packages.sort(ItemPackageHelper.createComparator(priceTypeList));
 
-        
+        try {
+            oFileWriter = new FileWriter()
+        }
     }
 
     private static BigDecimal parseAsBigDecimal(String doubleString) {
