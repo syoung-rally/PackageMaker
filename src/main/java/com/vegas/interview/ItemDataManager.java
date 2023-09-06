@@ -1,15 +1,16 @@
 package com.vegas.interview;
 
-import com.vegas.interview.models.*;
+import com.vegas.interview.models.Item;
+import com.vegas.interview.models.ItemPackage;
+import com.vegas.interview.models.ItemType;
+import com.vegas.interview.models.PriceType;
 
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static java.util.Map.entry;
-
 public class ItemDataManager {
-    private NavigableMap<BigDecimal, Set<Item>> items = new TreeMap<BigDecimal, Set<Item>>();
+    private NavigableMap<BigDecimal, Set<Item>> items = new TreeMap<>();
 
     public void addItem(Item item) {
 
@@ -37,7 +38,7 @@ public class ItemDataManager {
 
         // filter out any that are below min price and return
         return packages.stream()
-                .filter(p -> p.getPriceByPriceType(PriceType.PACKAGE).compareTo(minPrice) >= 0)
+                .filter(p -> p.getPriceByPriceType(PriceType.PACKAGE).compareTo(minPrice) > 0)
                 .collect(Collectors.toList());
     }
 

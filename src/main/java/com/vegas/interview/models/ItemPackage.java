@@ -1,6 +1,8 @@
 package com.vegas.interview.models;
 
 import java.math.BigDecimal;
+import java.text.NumberFormat;
+import java.util.Locale;
 import java.util.Optional;
 
 public class ItemPackage {
@@ -9,6 +11,7 @@ public class ItemPackage {
     private Optional<ShowItem> show;
 
     private static ItemPackage emptyItemPackage = new ItemPackage(Optional.empty(), Optional.empty(), Optional.empty());
+    private NumberFormat formatter = NumberFormat.getNumberInstance(Locale.ROOT);
 
     ItemPackage(Optional<HotelItem> hotel, Optional<TourItem> tour, Optional<ShowItem> show) {
         this.hotel = hotel;
@@ -33,35 +36,20 @@ public class ItemPackage {
     public ItemPackage copyWithAddedItem(Item item) {
         ItemPackage newItemPackage = new ItemPackage(this.hotel, this.tour, this.show);
         switch (item.getItemType()) {
-            case HOTEL:
-                newItemPackage.addHotel((HotelItem) item);
-                break;
-            case SHOW:
-                newItemPackage.addShow((ShowItem) item);
-                break;
-            case TOUR:
-                newItemPackage.addTour((TourItem) item);
-                break;
+            case HOTEL -> newItemPackage.addHotel((HotelItem) item);
+            case SHOW -> newItemPackage.addShow((ShowItem) item);
+            case TOUR -> newItemPackage.addTour((TourItem) item);
         }
         return newItemPackage;
     }
 
     public BigDecimal getPriceByPriceType(PriceType priceType) {
-        BigDecimal price = BigDecimal.ZERO;
-        switch (priceType) {
-            case HOTEL:
-                price = getOptionalPrice(this.hotel.map(i -> (Item) i));
-                break;
-            case SHOW:
-                price = getOptionalPrice(this.show.map(i -> (Item) i));
-                break;
-            case TOUR:
-                price = getOptionalPrice(this.tour.map(i -> (Item) i));
-                break;
-            case PACKAGE:
-                price = getPrice();
-                break;
-        }
+        BigDecimal price = switch (priceType) {
+            case HOTEL -> getOptionalPrice(this.hotel.map(i -> (Item) i));
+            case SHOW -> getOptionalPrice(this.show.map(i -> (Item) i));
+            case TOUR -> getOptionalPrice(this.tour.map(i -> (Item) i));
+            case PACKAGE -> getPrice();
+        };
         return price;
     }
 
@@ -87,6 +75,17 @@ public class ItemPackage {
             throw new RuntimeException("Attempting to add a item=% to package ");
         }
         this.tour = Optional.of(tour);
+    }
+
+    public String toString() {
+        formatter.setMinimumFractionDigits(1);
+        formatter.setMaximumFractionDigits(2);
+        return String.format(
+                "PACKAGE\t%s%s%s%s\n",
+                formatter.format(getPrice().doubleValue()),
+                hotel.map(e -> String.format("\t%s",e.toString())).orElse(""),
+                show.map(e -> String.format("\t%s",e.toString())).orElse(""),
+                tour.map(e -> String.format("\t%s",e.toString())).orElse(""));
     }
 }
 
