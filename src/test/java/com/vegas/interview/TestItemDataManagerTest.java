@@ -29,10 +29,10 @@ public class TestItemDataManagerTest {
             String outputFileName = String.format("%s.dat", testName);
             createAndCompareFiles(
                     "src/test/resources/test-items.dat",
-                    outputFileName,
-                    "200",
                     "50",
-                    testName);
+                    "200",
+                    testName,
+                    outputFileName);
         }
     }
 
@@ -40,10 +40,10 @@ public class TestItemDataManagerTest {
     public void testBadPriceTypeString() throws IOException {
         createAndCompareFiles(
                 "src/test/resources/test-bad-price.dat",
-                "bad-price-expected-result.dat",
-                "200",
                 "50",
-                "h");
+                "200",
+                "h",
+                "bad-price-expected-result.dat");
     }
 
     @Test
@@ -51,10 +51,10 @@ public class TestItemDataManagerTest {
         assertThrows(RuntimeException.class, () ->
             createAndCompareFiles(
                     "src/test/resources/not-present.dat",
-                    "never-made.dat",
-                    "200",
                     "50",
-                    "h")
+                    "200",
+                    "h",
+                    "never-made.dat")
         );
     }
 
@@ -63,27 +63,27 @@ public class TestItemDataManagerTest {
         assertThrows(RuntimeException.class, () ->
                 createAndCompareFiles(
                         "src/test/resources/test-items.dat",
-                        "never-made.dat",
-                        "200",
                         "50",
-                        "hat")
+                        "200",
+                        "hat",
+                        "never-made.dat")
         );
     }
 
     private void createAndCompareFiles(
         String inputFileName,
-        String outputFileName,
-        String maximum,
         String minimum,
-        String productArgs
+        String maximum,
+        String productArgs,
+        String outputFileName
     ) throws IOException {
         String expectedFileName = String.format("src/test/resources/test-%s", outputFileName);
         PackageMaker.makePackages(
                 inputFileName,
-                outputFileName,
                 minimum,
                 maximum,
-                productArgs
+                productArgs,
+                outputFileName
         );
 
         String expected = readContentsToString(expectedFileName);
