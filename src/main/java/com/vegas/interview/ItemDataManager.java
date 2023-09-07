@@ -46,7 +46,7 @@ public class ItemDataManager {
             BigDecimal maxPrice,
             ItemType itemType,
             Collection<ItemPackage> packages) {
-        Collection<ItemPackage> newPackages = new LinkedList<>();
+        Collection<ItemPackage> newPackages = new HashSet<>();
 
         for (ItemPackage itemPackage:  packages) {
             BigDecimal maxPriceForNewItem = maxPrice.subtract(itemPackage.getPrice());

@@ -54,26 +54,14 @@ public class ItemPackage {
     }
 
     private void addHotel(HotelItem hotel) {
-        if (this.hotel.isPresent()) {
-            // TODO fix error string
-            throw new RuntimeException("Attempting to add a item=% to package ");
-        }
         this.hotel = Optional.of(hotel);
      }
 
     private void addShow(ShowItem show) {
-        if (this.show.isPresent()) {
-            // TODO fix error string
-            throw new RuntimeException("Attempting to add a item=% to package ");
-        }
         this.show = Optional.of(show);
     }
 
     private void addTour(TourItem tour) {
-        if (this.tour.isPresent()) {
-            // TODO fix error string
-            throw new RuntimeException("Attempting to add a item=% to package ");
-        }
         this.tour = Optional.of(tour);
     }
 
@@ -81,12 +69,10 @@ public class ItemPackage {
         formatter.setMinimumFractionDigits(1);
         formatter.setMaximumFractionDigits(2);
         return String.format(
-                "PACKAGE\t%s%s%s%s\n",
+                "PACKAGE\t%s\t%s\t%s\t%s\n",
                 formatter.format(getPrice().doubleValue()),
-                hotel.map(e -> String.format("\t%s",e.toString())).orElse(""),
-                show.map(e -> String.format("\t%s",e.toString())).orElse(""),
-                tour.map(e -> String.format("\t%s",e.toString())).orElse(""));
+                hotel.map(e -> e.toString()).orElse("\t\t"),
+                show.map(e -> e.toString()).orElse("\t\t"),
+                tour.map(e -> e.toString()).orElse("\t\t"));
     }
 }
-
-

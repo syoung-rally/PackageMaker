@@ -22,37 +22,44 @@ public class PackageMaker {
 
 
     public static void main(String[] args) {
-        String inputFilename, outputFilename;
+        if (args.length == NUM_ARGS) {
+            makePackages(args[0], args[1], args[2], args[3], args[4]);
+        } else {
+            throw new RuntimeException(useageString);
+        }
+    }
+
+    public static void makePackages(
+            String inputFilename,
+            String outputFilename,
+            String minimumPriceStr,
+            String maximumPriceStr,
+            String productTypeString
+    ) {
         List<PriceType> priceTypeList;
         Set<ItemType> itemTypeSet;
-        BigDecimal minimumPrice, maximumPrice;
+
+        BigDecimal minimumPrice = parseAsBigDecimal(minimumPriceStr);
+        BigDecimal maximumPrice = parseAsBigDecimal(maximumPriceStr);
+
+        try {
+            priceTypeList = ItemPackageHelper.parsePriceTypeString(productTypeString);
+            itemTypeSet = ItemPackageHelper.createItemTypeSet(priceTypeList);
+        } catch (Exception e) {
+            throw new RuntimeException(
+                    String.format("Product type string contains unknown characters: %s",  productTypeString));
+        }
+
+
+        System.out.printf(
+                "inputFile=%s, outputFile=%s, priceTypeList=%s, minimumPrice=%.2f, maximumPrice=%.2f\n",
+                inputFilename, outputFilename, priceTypeList, minimumPrice.floatValue(), maximumPrice.floatValue());
+
 
         BufferedReader iFileReader;
         FileWriter oFileWriter;
 
         ItemDataManager itemDataManager = new ItemDataManager();
-
-        if (args.length == NUM_ARGS) {
-            inputFilename = args[0];
-            minimumPrice = parseAsBigDecimal(args[1]);
-            maximumPrice = parseAsBigDecimal(args[2]);
-            String productTypeString = args[3];
-            try {
-                priceTypeList = ItemPackageHelper.parsePriceTypeString(productTypeString);
-                itemTypeSet = ItemPackageHelper.createItemTypeSet(priceTypeList);
-            } catch (Exception e) {
-                throw new RuntimeException(
-                    String.format("Product type string contains unknown characters: %s",  productTypeString));
-            }
-            outputFilename = args[4];
-
-        } else {
-            throw new RuntimeException(useageString);
-        }
-
-        System.out.printf(
-            "inputFile=%s, outputFile=%s, priceTypeList=%s, minimumPrice=%.2f, maximumPrice=%.2f\n",
-            inputFilename, outputFilename, priceTypeList, minimumPrice.floatValue(), maximumPrice.floatValue());
 
         try {
             iFileReader = new BufferedReader(new FileReader(inputFilename));
@@ -73,8 +80,6 @@ public class PackageMaker {
                 }
             }
             iFileReader.close();
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException("Input file not found. Aborting.", e);
         } catch (IOException e) {
             throw new RuntimeException("Unable to read file due to IOException. Aborting.", e);
         }
@@ -91,6 +96,7 @@ public class PackageMaker {
         } catch (IOException e) {
             throw new RuntimeException("Unable to write file due to IOException. Aborting", e);
         }
+
     }
 
     private static BigDecimal parseAsBigDecimal(String doubleString) {
@@ -101,4 +107,5 @@ public class PackageMaker {
             throw new RuntimeException(useageString, e);
         }
     }
+
 }

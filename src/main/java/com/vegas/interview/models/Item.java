@@ -34,4 +34,21 @@ public abstract class Item {
         };
         return i;
     }
+
+    @Override
+    public int hashCode() {
+        return itemId;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == this) {
+            return true;
+        }
+        if (!(o instanceof Item)) {
+            return false;
+        }
+        return ((Item) o).itemId == this.itemId;
+    }
+
 }
