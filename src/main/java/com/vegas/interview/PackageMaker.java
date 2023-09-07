@@ -31,11 +31,12 @@ public class PackageMaker {
 
     public static void makePackages(
             String inputFilename,
-            String outputFilename,
             String minimumPriceStr,
             String maximumPriceStr,
-            String productTypeString
+            String productTypeString,
+            String outputFilename
     ) {
+
         List<PriceType> priceTypeList;
         Set<ItemType> itemTypeSet;
 
@@ -49,11 +50,6 @@ public class PackageMaker {
             throw new RuntimeException(
                     String.format("Product type string contains unknown characters: %s",  productTypeString));
         }
-
-
-        System.out.printf(
-                "inputFile=%s, outputFile=%s, priceTypeList=%s, minimumPrice=%.2f, maximumPrice=%.2f\n",
-                inputFilename, outputFilename, priceTypeList, minimumPrice.floatValue(), maximumPrice.floatValue());
 
 
         BufferedReader iFileReader;
